@@ -1,9 +1,9 @@
 /*
- * TODO: Name
- * TODO: Date
- * TODO: Class Period
- * TODO: Program Description
+ * TODO: Nikolay Merenko
+ * TODO: January 6th to January 12th 2026
+ * TODO: Period 6
  */
+
 import java.util.Scanner;
 import java.io.File;
 import java.util.Stack;
@@ -27,5 +27,12 @@ public class MyProgram {
 		{
 			System.out.println(e.getMessage());
 		}
+
+		Queue <String> mainLine = new LinkedList <String> ();
+		Queue <String> inspection = new LinkedList <String> ();
+
+
+		
+		
 	}
 }
