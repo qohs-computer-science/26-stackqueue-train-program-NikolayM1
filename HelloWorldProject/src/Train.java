@@ -1,54 +1,60 @@
 public class Train {
-    private String name, product, origin, destination;
+    private String product, origin, id, destination;
     private int weight, miles;
 
-   private int weightLimit;
-   private java.util.List<TrainCar> cars;
-   // 2-7 Instance Variables ~ 5-6 are my additions 
+    private int weightLimit;
+    private java.util.List<TrainCar> cars;
+   // 2-7 Instance Variables; 5-6 are my additions 
 
-    public Train(String name, String destination, int weightLimit) {
-        this.name = name;
+    public Train(String id, String destination, int weightLimit, String origin, String product, int miles) {
+        this.id = id;
         this.destination = destination;
         this.weightLimit = weightLimit;
-        this.currentWeight = 0;
+        this.weight = 0;
         this.cars = new java.util.ArrayList<>();
+        this.origin = origin;
+        this.product = product;
+        this.miles = miles;
     }
-    //9-16 Train Constructor
+    //9-18 Train Constructor
 
     public boolean canAddCar(TrainCar car) {
         if (weightLimit < 0) {
             return true;
         }
-        return currentWeight + car.getWeight() <= weightLimit;
+        return weight + car.getWeight() <= weightLimit;
     }
-    //18-23 method checks if a car can be added
+    //21-26 method checks if a car can be added
 
     public void addCar(TrainCar car) {
         cars.add(car);
-        currentWeight += car.getWeight();
+        weight += car.getWeight();
     }
-    //26-29 method to add a car
+    //29-32 method to add a car
 
     public boolean isEmpty() {
         return cars.isEmpty();
     }
-    //32-34 method for when car is empty
+    //35-37 method for when car is empty
 
     public void depart() {
-        System.out.println(name + " leaving for " + destination + " with the following cars:");
+        System.out.println(id + " leaving from " + origin + " for " + destination + " carrying " + product + " for " + miles + " miles with the following cars:");
         for (TrainCar car : cars) {
-            System.out.println(car.getName() + " containing " + car.getContents());
+            System.out.println(car.getID() + " containing " + car.getContents());
         }
         cars.clear();
-        currentWeight = 0;
+        weight = 0;
     }
-    //37-44 method prints out info when train is leaving
+    //40-47 method prints out info when train is leaving
 
-    public String getName() { return name; }
+    public String getID() { return id; }
     public String getDestination() { return destination; }
-    public int getCurrentWeight() { return currentWeight; }
+    public int getWeight() { return weight; }
     public int getWeightLimit() { return weightLimit; }
-    //47-50 returns instance variables
+    public String getOrigin() { return origin; }
+    public String getProduct() { return product; }
+    public int getMiles() { return miles; }
+    //50-56 returns instance variables
 
 }
  

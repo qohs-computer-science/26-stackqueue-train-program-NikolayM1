@@ -14,25 +14,30 @@ public class MyProgram {
 	public static int val = 0;
 	public static void main(String[] args) {
 
-		int limitTrackA = 100000, limitTrackB = 100000, limitTrackC = 100000;
+	int limitTrackA = 100000, limitTrackB = 100000, limitTrackC = 100000;
+
+	Scanner x = new Scanner(System.in);
+	try{
+		File f = new File("HelloWorldProject/src/data.txt");
+		x = new Scanner (f);
+		String name = x.nextLine();
+		System.out.println(name);
+	}
+	catch(Exception e)
+	{
+		System.out.println(e.getMessage());
+	}
+	// 7-29 starter code
 	
-		Scanner x = new Scanner(System.in);
-		try{
-			File f = new File("HelloWorldProject/src/data.txt");
-			x = new Scanner (f);
-			String name = x.nextLine();
-			System.out.println(name);
-		}
-		catch(Exception e)
-		{
-			System.out.println(e.getMessage());
-		}
+	Queue <String> mainLine = new LinkedList <String> ();
+	Queue <String> inspection = new LinkedList <String> ();
+	//32-33 creating queues
 
-		Queue <String> mainLine = new LinkedList <String> ();
-		Queue <String> inspection = new LinkedList <String> ();
+	Train trackA = new Train("trackA", "Trenton", limitTrackA);
+	Train trackB = new Train("trackB", "Charlotte", limitTrackB);
+	Train trackC = new Train("trackC", "Baltimore", limitTrackC);
+	Train trackD = new Train("trackD", "Other destinations", -1);
+	//36-39 creating train tracks
 
-
-		
-		
 	}
 }
