@@ -21,6 +21,10 @@ public class TrainCar {
         return weight;
     }
 
+    public String getID(){
+        return name;
+    }
+
     @Override
     public String toString() {
         return name + " containing " + contents + " (" + weight + " lbs)";
