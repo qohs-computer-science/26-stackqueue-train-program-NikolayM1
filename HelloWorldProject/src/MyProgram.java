@@ -2,18 +2,16 @@
  * Nikolay Merenko
  * January 6th to January 12th 2026
  * Period 6
+ * Program that sorts train cars into different tracks based on destination and contents using stacks and queues.
  */
-
-// NOTE TO SELF: Add comments before submitting at the end once you are done
 
 import java.util.Scanner;
 import java.io.File;
-import java.util.Stack;
 import java.util.Queue;
 import java.util.LinkedList;
+import java.util.Stack;
 import java.util.Map;
-import java.util.HashMap;
-
+import java.util.HashMap; 
 
 public class MyProgram {
 	public static int val = 0;
@@ -35,16 +33,15 @@ public class MyProgram {
 	
 	Queue<TrainCar> mainLine = new LinkedList<>();
 	Queue<TrainCar> inspection = new LinkedList<>();
-	Map<String, Queue<TrainCar>> tracks = new HashMap<>();
+	Map<String, Object> tracks = new HashMap<>();
 	Map<String, Integer> trackWeight = new HashMap<>();
 	Map<TrainCar, Integer> carMiles = new HashMap<>();
 	Map<TrainCar, String> carDest = new HashMap<>();
 	
-
-	Train trackA = new Train("trackA", "Trenton", limitTrackA);
-	Train trackB = new Train("trackB", "Charlotte", limitTrackB);
-	Train trackC = new Train("trackC", "Baltimore", limitTrackC);
-	Train trackD = new Train("trackD", "Other destinations", -1);
+	Train trackA = new Train("Track A", "Trenton", limitTrackA, "Freight Yard", "mixed cargo", 100);
+	Train trackB = new Train("Track B", "Charlotte", limitTrackB, "Freight Yard", "mixed cargo", 100);
+	Train trackC = new Train("Track C", "Baltimore", limitTrackC, "Freight Yard", "mixed cargo", 100);
+	Train trackD = new Train("Track D", "Other destinations", -1, "Freight Yard", "mixed cargo", 0);
 	
 	while (x.hasNextLine()) { 
 	String line = x.nextLine().trim(); 
@@ -77,17 +74,18 @@ public class MyProgram {
 	
 	if (!x.hasNextLine()) break;
 		String destinationCity = x.nextLine().trim();
-		System.out.println("Engine for " + destinationCity + " departing.");
-		Queue<TrainCar> traCar = tracks.remove(destinationCity);
+		String engineId = line; 
+		Stack<TrainCar> traCar = tracks.remove(destinationCity);
 		if (traCar == null || traCar.isEmpty()) {
 			System.out.println("No cars on that track.");
 		} else {
-			while (!traCar.isEmpty()) {
-				TrainCar c = traCar.poll();
-				mainLine.remove(c);
-				System.out.println("Departing: " + c.toString());
-			}
 			
+			System.out.println(engineId + " leaving for " + destinationCity + " with the following cars:");
+			while (!traCar.isEmpty()) {
+				TrainCar c = traCar.pop();
+				mainLine.remove(c);
+				System.out.println(c.getID() + " containing " + c.getContents());
+			}
 			trackWeight.put(destinationCity, 0);
 		}
 	} else {
@@ -96,62 +94,76 @@ public class MyProgram {
 	}
 	
 	while (!mainLine.isEmpty()) {
+		// dequeue from mainLine — process cars in arrival order 
 		TrainCar car = mainLine.poll();
 		int miles = carMiles.getOrDefault(car, 0);
 		if (miles > 700) {
+			// cars with more than 700 miles go to inspection 
 			inspection.add(car);
 		} else {
 			String dest = carDest.getOrDefault(car, "Other destinations");
 			sendCar(car, dest, tracks, trackWeight, trackA, trackB, trackC, trackD);
 		}
-	}
+	} 
 	while (!inspection.isEmpty()) {
+		// process inspection queue
 		TrainCar car = inspection.poll();
-		carMiles.put(car, 100);
+		carMiles.put(car, 100); // reset miles after inspection
 		String dest = carDest.getOrDefault(car, "Other destinations");
 		sendCar(car, dest, tracks, trackWeight, trackA, trackB, trackC, trackD);
-	}
+	} 
 
 	x.close();
 	
-		if (tracks.containsKey("Trenton") && !tracks.get("Trenton").isEmpty()) {
-			System.out.println("Track A departing:");
-			Queue<TrainCar> q = tracks.get("Trenton");
+		Object o = tracks.get("Trenton");
+		if (o instanceof java.util.Queue && !((java.util.Queue<?>)o).isEmpty()) {
+			java.util.Queue<TrainCar> q = (java.util.Queue<TrainCar>)o;
+			System.out.println("ENG00000 leaving for Trenton with the following cars:");
 			while (!q.isEmpty()) {
-				System.out.println("Departing: " + q.poll().toString());
+				TrainCar c = q.poll();
+				System.out.println(c.getID() + " containing " + c.getContents());
 			}
 			trackWeight.put("Trenton", 0);
 		}
-		if (tracks.containsKey("Charlotte") && !tracks.get("Charlotte").isEmpty()) {
-			System.out.println("Track B departing:");
-			Queue<TrainCar> q = tracks.get("Charlotte");
+		o = tracks.get("Charlotte");
+		if (o instanceof java.util.Queue && !((java.util.Queue<?>)o).isEmpty()) {
+			java.util.Queue<TrainCar> q = (java.util.Queue<TrainCar>)o;
+			System.out.println("ENG00000 leaving for Charlotte with the following cars:");
 			while (!q.isEmpty()) {
-				System.out.println("Departing: " + q.poll().toString());
+				TrainCar c = q.poll();
+				System.out.println(c.getID() + " containing " + c.getContents());
 			}
 			trackWeight.put("Charlotte", 0);
 		}
-		if (tracks.containsKey("Baltimore") && !tracks.get("Baltimore").isEmpty()) {
-			System.out.println("Track C departing:");
-			Queue<TrainCar> q = tracks.get("Baltimore");
+		o = tracks.get("Baltimore");
+		if (o instanceof java.util.Queue && !((java.util.Queue<?>)o).isEmpty()) {
+			java.util.Queue<TrainCar> q = (java.util.Queue<TrainCar>)o;
+			System.out.println("ENG00000 leaving for Baltimore with the following cars:");
 			while (!q.isEmpty()) {
-				System.out.println("Departing: " + q.poll().toString());
+				TrainCar c = q.poll();
+				System.out.println(c.getID() + " containing " + c.getContents());
 			}
 			trackWeight.put("Baltimore", 0);
-		}
+		}  
 
 		System.out.println("Station Status:");
-		Queue<TrainCar> qd = tracks.get("Other destinations");
-		if (qd == null || qd.isEmpty()) {
+		Object qdObj = tracks.get("Other destinations");
+		if (qdObj == null || (qdObj instanceof java.util.Queue && ((java.util.Queue<?>)qdObj).isEmpty()) || (qdObj instanceof java.util.Stack && ((java.util.Stack<?>)qdObj).isEmpty())) {
 			System.out.println("No cars waiting for other destinations");
 		} else {
+			// show what's waiting on Track D
 			System.out.println("Cars waiting on Track D:");
-			for (TrainCar c : qd) {
-				System.out.println(c.toString());
+			if (qdObj instanceof java.util.Stack) {
+				java.util.Stack<TrainCar> st = (java.util.Stack<TrainCar>)qdObj;
+				for (TrainCar c : st) System.out.println(c.getID() + " containing " + c.getContents());
+			} else if (qdObj instanceof java.util.Queue) {
+				java.util.Queue<TrainCar> q = (java.util.Queue<TrainCar>)qdObj;
+				for (TrainCar c : q) System.out.println(c.getID() + " containing " + c.getContents());
 			}
-		}
+		}  
 	}
 
-	private static void sendCar(TrainCar car, String destination, Map<String, Queue<TrainCar>> tracks, Map<String, Integer> trackWeight, Train trackA, Train trackB, Train trackC, Train trackD) {
+	private static void sendCar(TrainCar car, String destination, Map<String, Object> tracks, Map<String, Integer> trackWeight, Train trackA, Train trackB, Train trackC, Train trackD) {
 		Train target = null;
 		String key = null;
 		if ("Trenton".equals(destination)) {
@@ -166,22 +178,64 @@ public class MyProgram {
 
 		int limit = target.getWeightLimit();
 		int current = trackWeight.getOrDefault(key, 0);
+		// try to add car to the track; some tracks are queues (FIFO) and some are stacks (LIFO)
 		if (limit < 0 || current + car.getWeight() <= limit) {
-			tracks.computeIfAbsent(key, k -> new LinkedList<>()).add(car);
+			Object container = tracks.get(key);
+			if (container == null) {
+				// choose Stack for Other destinations (Track D), Queue for the main tracks
+				if ("Other destinations".equals(key)) {
+					java.util.Stack<TrainCar> st = new java.util.Stack<>();
+					st.push(car);
+					tracks.put(key, st);
+				} else {
+					java.util.Queue<TrainCar> q = new java.util.LinkedList<>();
+					q.add(car);
+					tracks.put(key, q);
+				}
+			} else {
+				if (container instanceof java.util.Stack) {
+					((java.util.Stack<TrainCar>)container).push(car);
+				} else if (container instanceof java.util.Queue) {
+					((java.util.Queue<TrainCar>)container).add(car);
+				}
+			}
 			trackWeight.put(key, current + car.getWeight());
 		} else {
-			System.out.println(target.getID() + " leaving from " + target.getOrigin() + " for " + target.getDestination() + " carrying " + target.getProduct() + " for " + target.getMiles() + " miles with the following cars:");
-			Queue<TrainCar> q = tracks.get(key);
-			if (q != null) {
-				while (!q.isEmpty()) {
-					TrainCar c = q.poll();
-					System.out.println("Departing: " + c.toString());
+			System.out.println("ENG00000 leaving for " + target.getDestination() + " with the following cars:");
+			Object s = tracks.get(key);
+			if (s != null) {
+				if (s instanceof java.util.Stack) {
+					java.util.Stack<TrainCar> st = (java.util.Stack<TrainCar>)s;
+					while (!st.isEmpty()) {
+						TrainCar c = st.pop();
+						System.out.println(c.getID() + " containing " + c.getContents());
+					}
+				} else if (s instanceof java.util.Queue) {
+					java.util.Queue<TrainCar> q = (java.util.Queue<TrainCar>)s;
+					while (!q.isEmpty()) {
+						TrainCar c = q.poll();
+						System.out.println(c.getID() + " containing " + c.getContents());
+					}
 				}
 			}
 			trackWeight.put(key, 0);
-			
-			tracks.computeIfAbsent(key, k -> new LinkedList<>()).add(car);
+			// add current car after departing
+			Object container = tracks.get(key);
+			if (container == null) {
+				if ("Other destinations".equals(key)) {
+					java.util.Stack<TrainCar> st = new java.util.Stack<>();
+					st.push(car);
+					tracks.put(key, st);
+				} else {
+					java.util.Queue<TrainCar> q = new java.util.LinkedList<>();
+					q.add(car);
+					tracks.put(key, q);
+				}
+			} else {
+				if (container instanceof java.util.Stack) ((java.util.Stack<TrainCar>)container).push(car);
+				else if (container instanceof java.util.Queue) ((java.util.Queue<TrainCar>)container).add(car);
+			}
 			trackWeight.put(key, car.getWeight());
-		}
+		} 
 	}
 }
