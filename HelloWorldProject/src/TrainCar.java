@@ -1,16 +1,16 @@
 public class TrainCar {
-    private String name;
+    private String id;
     private String contents;
     private int weight;
 
-    public TrainCar(String name, String contents, int weight) {
-        this.name = name;
+    public TrainCar(String id, String contents, int weight) {
+        this.id = id;
         this.contents = contents;
         this.weight = weight;
     }
 
-    public String getName() {
-        return name;
+    public String getID() {
+        return id;
     }
 
     public String getContents() {
@@ -21,12 +21,8 @@ public class TrainCar {
         return weight;
     }
 
-    public String getID(){
-        return name;
-    }
-
     @Override
     public String toString() {
-        return name + " containing " + contents + " (" + weight + " lbs)";
+        return id + " containing " + contents + " (" + weight + " lbs)";
     }
 }
