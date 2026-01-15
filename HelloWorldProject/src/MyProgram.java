@@ -20,6 +20,7 @@ public class MyProgram {
 	final int CHARLOTTE_LIMIT = 100000;
 	final int BALTIMORE_LIMIT = 100000;
 
+	// Read train data from file
 	Scanner x = new Scanner(System.in);
 	try{
 		File f = new File("HelloWorldProject/src/data.txt");
@@ -32,6 +33,7 @@ public class MyProgram {
 		System.out.println(e.getMessage());
 	}
 	
+	// Queues for different destination tracks and inspection station
 	Queue<TrainCar> mainLine = new LinkedList<>();
 	Queue<TrainCar> inspection = new LinkedList<>();
 	Queue<TrainCar> trentonTrack = new LinkedList<>();
@@ -46,11 +48,13 @@ public class MyProgram {
 	Map<TrainCar, Integer> carMiles = new HashMap<>();
 	Map<TrainCar, String> carDest = new HashMap<>();
 	
+	// Process each line of input data
 	while (x.hasNextLine()) { 
-	String line = x.nextLine().trim(); 
-	if (line.equals("END")) break;
+		String line = x.nextLine().trim(); 
+		if (line.equals("END")) break;
 
-	if (line.startsWith("CAR")) { 
+		// Parse train car data: ID, contents, destination, weight, and miles
+		if (line.startsWith("CAR")) { 
 
 		if (!x.hasNextLine()) break;
 		String contents = x.nextLine().trim();
@@ -66,6 +70,7 @@ public class MyProgram {
 		int miles = 0;
 		try { miles = Integer.parseInt(milesStr); } catch (NumberFormatException e) {}
 
+		// Create car and store metadata in hash maps for quick lookup
 		TrainCar car = new TrainCar(line, contents, weight);
 		mainLine.add(car);
 		carMiles.put(car, miles);
@@ -131,20 +136,20 @@ public class MyProgram {
 	}
 	}
 	
+	// Process main line: route cars or send to inspection for long distances
 	while (!mainLine.isEmpty()) {
-		// dequeue from mainLine, process cars in arrival order 
 		TrainCar car = mainLine.poll();
 		int miles = carMiles.getOrDefault(car, 0);
 		if (miles > 700) {
-			// cars with more than 700 miles go to inspection 
+			// Cars traveling >700 miles go to inspection for maintenance
 			inspection.add(car);
 		} else {
 			String dest = carDest.getOrDefault(car, "Other destinations");
 			sendCar(car, dest, trentonTrack, charlotteTrack, baltimoreTrack, otherTrack, weights, limits);
 		}
 	} 
+	// Process inspection queue and route inspected cars
 	while (!inspection.isEmpty()) {
-		// process inspection queue
 		TrainCar car = inspection.poll();
 		carMiles.put(car, 100); // reset miles after inspection
 		String dest = carDest.getOrDefault(car, "Other destinations");
@@ -187,11 +192,13 @@ public class MyProgram {
 		}  
 	}
 
+	// Route car to appropriate track based on destination, respecting weight limits
 	private static void sendCar(TrainCar car, String destination, Queue<TrainCar> trentonTrack, Queue<TrainCar> charlotteTrack, Queue<TrainCar> baltimoreTrack, Stack<TrainCar> otherTrack, int[] weights, int[] limits) {
 		if ("Trenton".equals(destination)) {
 			int i = 0;
 			int limit = limits[i];
 			int current = weights[i];
+			// If adding car doesn't exceed weight limit, add it; otherwise dispatch and start new train
 			if (limit < 0 || current + car.getWeight() <= limit) {
 				trentonTrack.add(car);
 				weights[i] += car.getWeight();

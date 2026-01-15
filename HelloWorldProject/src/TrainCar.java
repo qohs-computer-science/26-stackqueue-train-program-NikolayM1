@@ -3,6 +3,7 @@ public class TrainCar {
     private String contents;
     private int weight;
 
+    // Constructor to create a train car with ID, contents, and weight
     public TrainCar(String id, String contents, int weight) {
         this.id = id;
         this.contents = contents;
@@ -21,6 +22,7 @@ public class TrainCar {
         return weight;
     }
 
+    // Format train car info for display
     @Override
     public String toString() {
         return id + " containing " + contents + " (" + weight + " lbs)";

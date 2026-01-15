@@ -6,6 +6,7 @@ public class Train {
     private java.util.List<TrainCar> cars;
    // 2-7 Instance Variables; 5-6 are my additions 
 
+    // Train Constructor - initializes train with route details and capacity limit
     public Train(String id, String destination, int weightLimit, String origin, String product, int miles) {
         this.id = id;
         this.destination = destination;
@@ -16,27 +17,27 @@ public class Train {
         this.product = product;
         this.miles = miles;
     }
-    //9-18 Train Constructor
 
+    // Check if car can be added without exceeding weight limit
     public boolean canAddCar(TrainCar car) {
         if (weightLimit < 0) {
             return true;
         }
         return weight + car.getWeight() <= weightLimit;
     }
-    //21-26 method checks if a car can be added
 
+    // Add car to train and update total weight
     public void addCar(TrainCar car) {
         cars.add(car);
         weight += car.getWeight();
     }
-    //29-32 method to add a car
 
+    // Check if train has any cars
     public boolean isEmpty() {
         return cars.isEmpty();
     }
-    //35-37 method for when car is empty
 
+    // Display departure info and clear train for next load
     public void depart() {
         System.out.println(id + " leaving from " + origin + " for " + destination + " carrying " + product + " for " + miles + " miles with the following cars:");
         for (TrainCar car : cars) {
@@ -45,8 +46,8 @@ public class Train {
         cars.clear();
         weight = 0;
     }
-    //40-47 method prints out info when train is leaving
 
+    // Getters for train properties
     public String getID() { return id; }
     public String getDestination() { return destination; }
     public int getWeight() { return weight; }
@@ -54,7 +55,6 @@ public class Train {
     public String getOrigin() { return origin; }
     public String getProduct() { return product; }
     public int getMiles() { return miles; }
-    //50-56 returns instance variables
 
 }
  
